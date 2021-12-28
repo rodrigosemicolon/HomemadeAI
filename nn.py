@@ -14,6 +14,12 @@ def sigmoid(input):
 def softmax(input):
     return np.exp(input)/np.sum(np.exp(input), axis=0)
 
+def MeanSquareLoss(results, benchmarks):
+    n = len(results)
+    res = benchmarks-results
+    res=res**2
+    return res/n
+    
 class layer():
     def __init__(self, inputs, size, activation_function, weights=None, biases=None):
         
@@ -45,16 +51,20 @@ class layer():
 
 class nn():
     #layers as a list of tuples containing number of nodes and activation function
-    def __init__(self, layers):
-        assert len(layers)>2
-        
-        self.layers=[]
-        for l in range(len(layers)):
-            if l==0:
-                current_layer = layer(layers[l][0],layers[l][0],layers[l][1])
-            else:
-                current_layer = layer(layers[l-1][0],layers[l][0],layers[l][1])    
-            self.layers.append(current_layer)
+    def __init__(self, layers, custom_layers=[]):
+        if len(custom_layers)>0:
+            assert len(custom_layers)>2
+            self.layers=custom_layers
+        else:
+            assert len(layers)>2
+            
+            self.layers=[]
+            for l in range(len(layers)):
+                if l==0:
+                    current_layer = layer(layers[l][0],layers[l][0],layers[l][1])
+                else:
+                    current_layer = layer(layers[l-1][0],layers[l][0],layers[l][1])    
+                self.layers.append(current_layer)
         
     def forward(self, x):
         
@@ -62,6 +72,13 @@ class nn():
             x=layer.forward(x)
             print("output: ",x)
         return x
+    
+    def train(self, X, y, batch_size, learning_rate):
+        pass
+
+
+    def test(self, X, y):
+        pass
 
 
 
